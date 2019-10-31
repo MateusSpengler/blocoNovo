@@ -8,7 +8,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Lifecycle;
 
 import android.view.View;
 import android.view.Menu;
@@ -23,45 +22,35 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor = null;
     private static final String PREFERENCIAS_FILE = "Notas";
     private SharedPreferences preferences;
-    final EditText notas = findViewById(R.id.text_notas);
-    final TextView resultado = findViewById(R.id.text_resultado);
+    private EditText notas;
+    private TextView resultado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        notas = findViewById(R.id.text_notas);
+        resultado = findViewById(R.id.text_resultado);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                editor.putString("teste", String.valueOf(notas.getText()));
+                editor.commit();
+                resultado.setText(preferences.getString("teste","Erro ao Recuperar a String"));
             }
         });
 
         preferences = getSharedPreferences("notas", MODE_PRIVATE);
         editor = preferences.edit();
 
-        preferences.getString("teste","Erro ao Recuperar a String");
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                editor.putString("teste", String.valueOf(notas.getText()));
-                editor.commit();
-                resultado.setText(preferences.getString("teste","Erro ao Recuperar a String"));
-
-            }
-        });
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         resultado.setText(preferences.getString("teste","Erro ao Recuperar a String"));
     }
 }
